@@ -41,7 +41,7 @@ instance DecEq Bool where
 -- Nat
 --------------------------------------------------------------------------------
 
-total OnotS : Z = S n -> _|_
+total OnotS : Nat.Z = Nat.S n -> _|_
 OnotS refl impossible
 
 instance DecEq Nat where
@@ -88,14 +88,14 @@ instance (DecEq a, DecEq b) => DecEq (Either a b) where
 -- Fin
 --------------------------------------------------------------------------------
 
-total fZNotfS : {f : Fin n} -> fZ {k = n} = fS f -> _|_
+total fZNotfS : {f : Fin n} -> Z {k = n} = S f -> _|_
 fZNotfS refl impossible
 
 instance DecEq (Fin n) where
-  decEq fZ fZ = Yes refl
-  decEq fZ (fS f) = No fZNotfS
-  decEq (fS f) fZ = No $ negEqSym fZNotfS
-  decEq (fS f) (fS f') with (decEq f f')
+  decEq Z Z = Yes refl
+  decEq Z (S f) = No fZNotfS
+  decEq (S f) Z = No $ negEqSym fZNotfS
+  decEq (S f) (S f') with (decEq f f')
     | Yes p = Yes $ cong p
     | No p = No $ \h => p $ fSinjective {f = f} {f' = f'} h
 

@@ -11,21 +11,21 @@ using (k : Nat, ts : Vect k Type)
     (::) : t -> HVect ts -> HVect (t::ts)
 
   index : (i : Fin k) -> HVect ts -> index i ts
-  index fZ (x::xs) = x
-  index (fS j) (x::xs) = index j xs
+  index Z (x::xs) = x
+  index (S j) (x::xs) = index j xs
 
   deleteAt : {us : Vect (S l) Type} -> (i : Fin (S l)) -> HVect us -> HVect (deleteAt i us)
-  deleteAt fZ (x::xs) = xs
-  deleteAt {l = S m} (fS j) (x::xs) = x :: deleteAt j xs
+  deleteAt Z (x::xs) = xs
+  deleteAt {l = S m} (S j) (x::xs) = x :: deleteAt j xs
   deleteAt _ [] impossible
 
   replaceAt : (i : Fin k) -> t -> HVect ts -> HVect (replaceAt i t ts)
-  replaceAt fZ y (x::xs) = y::xs
-  replaceAt (fS j) y (x::xs) = x :: replaceAt j y xs
+  replaceAt Z y (x::xs) = y::xs
+  replaceAt (S j) y (x::xs) = x :: replaceAt j y xs
 
   updateAt : (i : Fin k) -> (index i ts -> t) -> HVect ts -> HVect (replaceAt i t ts)
-  updateAt fZ f (x::xs) = f x :: xs
-  updateAt (fS j) f (x::xs) = x :: updateAt j f xs
+  updateAt Z f (x::xs) = f x :: xs
+  updateAt (S j) f (x::xs) = x :: updateAt j f xs
 
   (++) : {us : Vect l Type} -> HVect ts -> HVect us -> HVect (ts ++ us)
   (++) [] ys = ys

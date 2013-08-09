@@ -34,33 +34,33 @@ init (x::[])    = []
 init (x::y::ys) = x :: init (y::ys)
 
 index : Fin n -> Vect n a -> a
-index fZ     (x::xs) = x
-index (fS k) (x::xs) = index k xs
-index fZ     [] impossible
+index Z     (x::xs) = x
+index (S k) (x::xs) = index k xs
+index Z     [] impossible
 
 deleteAt : Fin (S n) -> Vect (S n) a -> Vect n a
-deleteAt           fZ     (x::xs) = xs
-deleteAt {n = S m} (fS k) (x::xs) = x :: deleteAt k xs
+deleteAt           Z     (x::xs) = xs
+deleteAt {n = S m} (S k) (x::xs) = x :: deleteAt k xs
 deleteAt           _      [] impossible
 
 replaceAt : Fin n -> t -> Vect n t -> Vect n t
-replaceAt fZ y (x::xs) = y::xs
-replaceAt (fS k) y (x::xs) = x :: replaceAt k y xs
+replaceAt Z y (x::xs) = y::xs
+replaceAt (S k) y (x::xs) = x :: replaceAt k y xs
 
 --------------------------------------------------------------------------------
 -- Subvectors
 --------------------------------------------------------------------------------
 
 take : Fin n -> Vect n a -> (p ** Vect p a)
-take fZ     xs      = (_ ** [])
-take (fS k) []      impossible
-take (fS k) (x::xs) with (take k xs)
+take Z     xs      = (_ ** [])
+take (S k) []      impossible
+take (S k) (x::xs) with (take k xs)
   | (_ ** tail) = (_ ** x::tail)
 
 drop : Fin n -> Vect n a -> (p ** Vect p a)
-drop fZ     xs      = (_ ** xs)
-drop (fS k) []      impossible
-drop (fS k) (x::xs) = drop k xs
+drop Z     xs      = (_ ** xs)
+drop (S k) []      impossible
+drop (S k) (x::xs) = drop k xs
 
 --------------------------------------------------------------------------------
 -- Conversion from list (toList is provided by Foldable)
@@ -305,7 +305,7 @@ diag ((x::xs)::xss) = x :: diag (map tail xss)
 
 range : Vect n (Fin n)
 range {n=Z} = []
-range {n=S _} = fZ :: map fS range
+range {n=S _} = Z :: map S range
 
 --------------------------------------------------------------------------------
 -- Proofs

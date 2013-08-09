@@ -8,8 +8,8 @@ data BoundedList : Type -> Nat -> Type where
   (::) : a -> BoundedList a n -> BoundedList a (S n)
 
 length : BoundedList a n -> Fin (S n)
-length [] = fZ
-length (x :: xs) = fS (length xs)
+length [] = Z
+length (x :: xs) = S (length xs)
 
 --------------------------------------------------------------------------------
 -- Indexing into bounded lists
@@ -17,8 +17,8 @@ length (x :: xs) = fS (length xs)
 
 index : Fin (S n) -> BoundedList a n -> Maybe a
 index _      []        = Nothing
-index fZ     (x :: _)  = Just x
-index (fS f) (_ :: xs) = index f xs
+index Z     (x :: _)  = Just x
+index (S f) (_ :: xs) = index f xs
 
 --------------------------------------------------------------------------------
 -- Adjusting bounds

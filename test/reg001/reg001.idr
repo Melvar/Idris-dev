@@ -8,4 +8,4 @@ data Imp : Type where
    MkImp : {any : Type} -> any -> Imp
 
 testVal : Imp
-testVal = MkImp (apply id Z)
+testVal = MkImp (apply id Nat.Z)

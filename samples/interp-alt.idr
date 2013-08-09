@@ -14,12 +14,12 @@ using (G : Vect n Ty)
       (::) : interpTy a -> Env G -> Env (a :: G)
 
 --   data HasType : (i : Fin n) -> Vect n Ty -> Ty -> Type where
---       stop : HasType fZ (t :: G) t
---       pop  : HasType k G t -> HasType (fS k) (u :: G) t
+--       stop : HasType Z (t :: G) t
+--       pop  : HasType k G t -> HasType (S k) (u :: G) t
 
   lookup : (i:Fin n) -> Env G -> interpTy (index i G)
-  lookup fZ     (x :: xs) = x
-  lookup (fS i) (x :: xs) = lookup i xs
+  lookup Z     (x :: xs) = x
+  lookup (S i) (x :: xs) = lookup i xs
 
   data Expr : Vect n Ty -> Ty -> Type where
       Var : (i : Fin n) -> Expr G (index i G)
@@ -41,32 +41,32 @@ using (G : Vect n Ty)
   interp env (Bind v f)  = interp env (f (interp env v))
  
   eId : Expr G (TyFun TyInt TyInt)
-  eId = Lam (Var fZ)
+  eId = Lam (Var Z)
 
   eTEST : Expr G (TyFun TyInt (TyFun TyInt TyInt))
-  eTEST = Lam (Lam (Var (fS fZ)))
+  eTEST = Lam (Lam (Var (S Z)))
 
   eAdd : Expr G (TyFun TyInt (TyFun TyInt TyInt))
-  eAdd = Lam (Lam (Op prim__addInt (Var fZ) (Var (fS fZ))))
+  eAdd = Lam (Lam (Op prim__addInt (Var Z) (Var (S Z))))
   
 --   eDouble : Expr G (TyFun TyInt TyInt)
---   eDouble = Lam (App (App (Lam (Lam (Op' (+) (Var fZ) (Var (fS fZ))))) (Var fZ)) (Var fZ))
+--   eDouble = Lam (App (App (Lam (Lam (Op' (+) (Var Z) (Var (S Z))))) (Var Z)) (Var Z))
   
   eDouble : Expr G (TyFun TyInt TyInt)
-  eDouble = Lam (App (App eAdd (Var fZ)) (Var fZ))
+  eDouble = Lam (App (App eAdd (Var Z)) (Var Z))
  
   app : |(f : Expr G (TyFun a t)) -> Expr G a -> Expr G t
   app = \f, a => App f a
 
   eFac : Expr G (TyFun TyInt TyInt)
-  eFac = Lam (If (Op (==) (Var fZ) (Val 0))
-                 (Val 1) (Op (*) (app eFac (Op (-) (Var fZ) (Val 1))) (Var fZ)))
+  eFac = Lam (If (Op (==) (Var Z) (Val 0))
+                 (Val 1) (Op (*) (app eFac (Op (-) (Var Z) (Val 1))) (Var Z)))
 
   -- Exercise elaborator: Complicated way of doing \x y => x*4 + y*2
   
   eProg : Expr G (TyFun TyInt (TyFun TyInt TyInt))
-  eProg = Lam (Lam (Bind (App eDouble (Var (fS fZ)))
-              (\x => Bind (App eDouble (Var fZ))
+  eProg = Lam (Lam (Bind (App eDouble (Var (S Z)))
+              (\x => Bind (App eDouble (Var Z))
               (\y => Bind (App eDouble (Val x))
               (\z => App (App eAdd (Val y)) (Val z))))))
 

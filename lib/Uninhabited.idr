@@ -4,9 +4,9 @@ class Uninhabited t where
   total uninhabited : t -> _|_
 
 instance Uninhabited (Fin Z) where
-  uninhabited fZ impossible
-  uninhabited (fS f) impossible
+  uninhabited Z impossible
+  uninhabited (S f) impossible
 
-instance Uninhabited (Z = S n) where
+instance Uninhabited (Nat.Z = Nat.S n) where
   uninhabited refl impossible
 

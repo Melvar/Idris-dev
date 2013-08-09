@@ -148,7 +148,7 @@ absurdBoolDischarge p = replace {P = disjointTy} p ()
     disjointTy False  = ()
     disjointTy True   = _|_
 
-total isEmptySizeZero : (h : MaxiphobicHeap a) -> (isEmpty h = True) -> size h = Z
+total isEmptySizeZero : (h : MaxiphobicHeap a) -> (isEmpty h = True) -> size h = Nat.Z
 isEmptySizeZero Empty          p = refl
 isEmptySizeZero (Node s l e r) p = ?isEmptySizeZeroNodeAbsurd
 
