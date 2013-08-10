@@ -88,16 +88,16 @@ instance (DecEq a, DecEq b) => DecEq (Either a b) where
 -- Fin
 --------------------------------------------------------------------------------
 
-total fZNotfS : {f : Fin n} -> Z {k = n} = S f -> _|_
-fZNotfS refl impossible
+total FinZNotS : {f : Fin n} -> Z {k = n} = S f -> _|_
+FinZNotS refl impossible
 
 instance DecEq (Fin n) where
   decEq Z Z = Yes refl
-  decEq Z (S f) = No fZNotfS
-  decEq (S f) Z = No $ negEqSym fZNotfS
+  decEq Z (S f) = No FinZNotS
+  decEq (S f) Z = No $ negEqSym FinZNotS
   decEq (S f) (S f') with (decEq f f')
     | Yes p = Yes $ cong p
-    | No p = No $ \h => p $ fSinjective {f = f} {f' = f'} h
+    | No p = No $ \h => p $ Sinjective {f = f} {f' = f'} h
 
 --------------------------------------------------------------------------------
 -- Tuple

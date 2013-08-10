@@ -41,8 +41,8 @@ last : Fin (S n)
 last {n=Z} = Z
 last {n=S _} = S last
 
-total fSinjective : {f : Fin n} -> {f' : Fin n} -> (S f = S f') -> f = f'
-fSinjective refl = refl
+total Sinjective : {f : Fin n} -> {f' : Fin n} -> (S f = S f') -> f = f'
+Sinjective refl = refl
 
 
 -- Construct a Fin from an integer literal which must fit in the given Fin
