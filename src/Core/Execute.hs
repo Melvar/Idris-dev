@@ -32,6 +32,7 @@ import Foreign.Marshal.Alloc (free)
 import Foreign.Ptr
 #endif
 
+import System.Environment (getProgName, getArgs)
 import System.IO
 
 #ifndef IDRIS_FFI
@@ -284,6 +285,21 @@ execApp' env ctxt (EP _ (UN "mkForeignPrim") _) (_:fn:(EPtr p):rest)
            = let res = ioWrap . EConstant . I $
                        if p == nullPtr then 1 else 0
                   in execApp' env ctxt res (tail rest)
+
+execApp' env ctxt (EP _ (UN "mkForeignPrim") _) (_:fn:rest)
+    | Just (FFun "idris_numArgs" _ _) <- foreignFromTT fn
+           = do args <- execIO getArgs
+                let res = ioWrap . EConstant . I $ 1 + length args
+                execApp' env ctxt res (tail rest)
+
+execApp' env ctxt (EP _ (UN "mkForeignPrim") _) (_:fn:EConstant (I idx):rest)
+    | Just (FFun "idris_getArg" _ _) <- foreignFromTT fn
+           = do args' <- execIO $ liftM2 (:) getProgName getArgs
+                if idx < 0 || idx >= length args'
+                   then fail $ "Encountered call to getArg with out-of-range index " ++
+                            show idx ++ " into only " ++ show (length args') ++ " args"
+                   else let res = ioWrap . EConstant . Str $ args' !! idx
+                            in execApp' env ctxt res (tail rest)
 
 -- Throw away the 'World' argument to the foreign function
 
