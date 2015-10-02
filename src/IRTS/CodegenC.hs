@@ -53,8 +53,7 @@ codegenC' :: [(Name, SDecl)] ->
              DbgLevel ->
              IO ()
 codegenC' defs out exec incs objs libs flags exports iface dbg
-    = do print (libFlags, incFlags, libs, flags)
-         let bc = map toBC defs
+    = do let bc = map toBC defs
          let h = concatMap toDecl (map fst bc)
          let cc = concatMap (uncurry toC) bc
          let hi = concatMap ifaceC (concatMap getExp exports)
@@ -74,6 +73,7 @@ codegenC' defs out exec incs objs libs flags exports iface dbg
              libFlags <- getLibFlags
              incFlags <- getIncFlags
              envFlags <- getEnvFlags
+             print (libFlags, incFlags, libs, flags)
              let args = [gccDbg dbg] ++
                         gccFlags iface ++
                         -- # Any flags defined here which alter the RTS API must also be added to config.mk
