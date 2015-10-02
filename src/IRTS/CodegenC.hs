@@ -53,7 +53,7 @@ codegenC' :: [(Name, SDecl)] ->
              DbgLevel ->
              IO ()
 codegenC' defs out exec incs objs libs flags exports iface dbg
-    = do -- print defs
+    = do print (libFlags, incFlags, libs, flags)
          let bc = map toBC defs
          let h = concatMap toDecl (map fst bc)
          let cc = concatMap (uncurry toC) bc
